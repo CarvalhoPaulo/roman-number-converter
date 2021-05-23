@@ -15,15 +15,20 @@ public class Converter {
 		put('M', 1000);
 	}};
 
-	public int convert(String romanNumber) {
+	public int convert(String romanNumber) throws Exception {
+		validate(romanNumber);
+		return calculate(romanNumber);
+	}
+
+	private int calculate(String romanNumber) {
 		int result = 0;
 		
 		int lastAtRight = 0;
 		for (int i = romanNumber.length() - 1; i > -1; i--) {
-			Character character = romanNumber.charAt(i);
+			Character c = romanNumber.charAt(i);
 			
 			int multiplicator = 1;
-			int actual = table.get(character);
+			int actual = table.get(c);
 			if (actual < lastAtRight) multiplicator = -1;
 			
 			result += actual * multiplicator;
@@ -31,6 +36,20 @@ public class Converter {
 			lastAtRight = actual;
 		}
 		return result;
+	}
+
+	private void validate(String romanNumber) throws Exception {
+		int repetition = 1;
+		Character lastChar = null;
+		for (Character c : romanNumber.toCharArray()) {
+			if (lastChar == c) {
+				repetition++;
+			}
+			if (repetition > 3) {
+				throw new Exception("Invalid roman number");
+			}
+			lastChar = c;
+		}
 	}
 
 }
